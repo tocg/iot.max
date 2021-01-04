@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="/layuiadmin/layui/css/layui.css" rel="stylesheet" />
+    <link href="/layuiadmin/style/admin.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+    <script src="~/layuiadmin/layui/layui.js"></script>
+    <style>
+        /*分页-数字背景*/
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #1E9FFF;
+        }
+        /*分页-数字*/
+        .layui-laypage a:hover {
+            color: #1E9FFF;
+        }
+        /*选中*/
+        .layui-form-checked[lay-skin=primary] i {
+            border-color: #1E9FFF !important;
+            background-color: #1E9FFF;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+
+<style>
+    .layui-form-label {
+        width: 150px;
+    }
+    .site-block{
+        padding:20px;
+    }
+</style>
+<div class="site-block">
+    <form class="layui-form" lay-filter="formTest">
+        @*<div class="layui-form-item">
+                <label class="layui-form-label">商品ID</label>
+                <div class="layui-input-block">
+                    <input type="text" id="Id" required lay-verify="required" placeholder="请输入商品ID" autocomplete="off" class="layui-input">
+                </div>
+            </div>*@
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="Name" name="Name" required lay-verify="required" placeholder="请输入商品名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品编号</label>
+            <div class="layui-input-inline">
+                <input type="text" id="Code" name="Code" required lay-verify="required" placeholder="请输入商品编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">一级菜单</label>
+            <div class="layui-input-inline">
+                <select name="OneCateId" id="OneCateId">
+                    <option value=""></option>
+                    <option value="0">电子产品</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">二级菜单</label>
+            <div class="layui-input-inline">
+                <select name="TwoCateId" id="TwoCateId">
+                    <option value=""></option>
+                    <option value="0">手机</option>
+                    <option value="1">电脑</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌</label>
+            <div class="layui-input-inline">
+                <select name="BrandId" id="BrandId">
+                    <option value=""></option>
+                    <option value="0">李宁</option>
+                    <option value="1">花花公子</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品市场价</label>
+            <div class="layui-input-inline">
+                <input type="text" id="MarketPrice" name="MarketPrice" required lay-verify="required" placeholder="请输入商品市场价" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品价格</label>
+            <div class="layui-input-inline">
+                <input type="text" id="Price" name="Price" required lay-verify="required" placeholder="请输入商品价格" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品库存数量</label>
+            <div class="layui-input-inline">
+                <input type="text" id="StockNum" name="StockNum" required lay-verify="required" placeholder="请输入商品库存数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品出售数量</label>
+            <div class="layui-input-inline">
+                <input type="text" id="SoldNum" name="SoldNum" required lay-verify="required" placeholder="请输入商品出售数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否热销</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="IsHot" value="1" title="是">
+                <input type="radio" name="IsHot" value="0" title="否" checked>
+            </div>
+            <label class="layui-form-label">是否新品</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="IsNew" value="1" title="是" checked>
+                <input type="radio" name="IsNew" value="0" title="否">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否出售</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="IsSale" value="1" title="是" checked>
+                <input type="radio" name="IsSale" value="0" title="否">
+            </div>
+            <label class="layui-form-label">是否特殊</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="IsSpecial" value="1" title="是">
+                <input type="radio" name="IsSpecial" value="0" title="否" checked>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">商品描述</label>
+            <div class="layui-input-block">
+                <div class="layui-row">
+                    <div class="layui-col-lg7">
+                        <textarea name="Description" id="Description" placeholder="请输入商品描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="sub">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form;
+
+
+        form.on('submit(sub)', function (data) {
+            console.log(data);
+            var data1 = form.val("formTest");
+            console.log(data1);
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+        function GoodsAdd2() {
+        }
+    });
+
+    function GoodsAdd() {
+        var obj = {};
+        obj.Name = $("#Name").val();
+        obj.Code = $("#Code").val();
+        obj.OneCateId = parseInt($("#OneCateId").val());
+        obj.TwoCateId = parseInt($("#TwoCateId").val());
+        obj.BrandId = parseInt($("#BrandId").val());
+        obj.MarketPrice = parseFloat($("#MarketPrice").val());
+        obj.StockNum = parseInt($("#StockNum").val());
+        obj.SoldNum = parseInt($("#SoldNum").val());
+        obj.Price = parseFloat($("#Price").val());
+        obj.IsHot = true;
+        obj.IsNew = true;
+        obj.IsSale = true;
+        obj.IsSpecial = true;
+        obj.Description = $("#Description").val();
+        console.log(JSON.stringify(obj));
+        $.ajax({
+            url: "https://localhost:44356/Goods/goodsAdd",
+            type: "post",
+            dataType: "json",
+            data: JSON.stringify(obj),
+            async: true,
+            contentType: 'application/json;charset=UTF-8',
+            //accepts: "application/x-www-form-urlencoded",
+            success: function (d) {
+                if (d > 0) {
+                    layer.msg("添加成功");
+                    location.href = '/Home/goodsShow';
+                }
+            }
+
+        });
+    }
+</script>
+
