@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/src/ui/vue-max
+/src/Iot.Max.Api/.config
+/src/Iot.Max.Wx
