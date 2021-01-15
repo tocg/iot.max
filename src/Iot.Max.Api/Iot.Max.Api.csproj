@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Iot.Max.Lib\Iot.Max.Lib.csproj" />
     <ProjectReference Include="..\Iot.Max.Model\Iot.Max.Model.csproj" />
     <ProjectReference Include="..\Iot.Max.Services\Iot.Max.Services.csproj" />
+    <ProjectReference Include="..\Iot.Max.Wx\Iot.Max.Wx.csproj" />
   </ItemGroup>
 
   <ItemGroup>
