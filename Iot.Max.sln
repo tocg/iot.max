@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "document", "document", "{F4
 		document\readme.txt = document\readme.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Max.Wx", "src\Iot.Max.Wx\Iot.Max.Wx.csproj", "{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Wx", "src\Iot.Max.Wx\Iot.Max.Wx.csproj", "{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Max.Wx.View", "src\Iot.Max.Wx.View\Iot.Max.Wx.View.csproj", "{3F2A50B7-6808-4575-9784-60C08FB34CAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

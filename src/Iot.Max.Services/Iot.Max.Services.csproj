@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IServicesInsert.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Iot.Max.Common\Iot.Max.Common.csproj" />
     <ProjectReference Include="..\Iot.Max.Lib\Iot.Max.Lib.csproj" />
     <ProjectReference Include="..\Iot.Max.Model\Iot.Max.Model.csproj" />

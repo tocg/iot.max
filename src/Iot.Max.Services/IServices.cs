@@ -16,6 +16,8 @@ namespace Iot.Max.Services
         T QueryFirst<T>(string id);
 
         int Insert<T>(T t);
+        int InsertProc<T>(PageParameters<T> parameters);
+        int InsertProcOut<T>(PageParameters<T> parameters, out string id);
         int Update<T>(T t);
         int Delete<T>(List<T> ids);
     }

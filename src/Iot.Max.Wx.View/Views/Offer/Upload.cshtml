@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+}
+<style>
+    .title {
+        font-size: 30px;
+        font-weight: 600;
+        text-align: center;
+        padding: 30px 0;
+    }
+</style>
+
+<div class="title">上传面试邀约</div>
+
+<div class="row">
+    <div class="col-md-12 ">
+        <form class="form-horizontal" id="form">
+            <!-- 表单区域-->
+            <fieldset>
+                <!-- 每一个form-group都可以自定义布局-->
+                <div class="form-group">
+                    <!-- label表示文字提示标签,可以通过表单的组建的id提示-->
+                    <label class="col-md-2 control-label" for="CompanyName">公司名称</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="CompanyName" id="CompanyName" type="text" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- label表示文字提示标签,可以通过表单的组建的id提示-->
+                    <label class="col-md-2 control-label" for="times">面试时间</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="Times" id="Times" type="datetime-local" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- label表示文字提示标签,可以通过表单的组建的id提示-->
+                    <label class="col-md-2 control-label" for="images">邀约截图</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="images" id="images" type="file" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align: center;margin-top:30px;">
+                        <input class="btn btn-primary" type="button" value=" 提 交 " />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+@*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js?v=2"></script>*@
+
+<script type="text/javascript">
+
+    var userid = '';
+    var code = getQueryVariable("code");
+    //if (code == "") {
+    //    //跳转到授权页面
+    //}
+
+    $.get(baseUrl + '/wx/web/auth/?code=' + code + '&isdetail=1', function (res) {
+        userid = res.data;
+    });
+
+    $('.btn').on('click', function () {
+
+        //两种不同的格式，获取表单数据
+        //var data = $("#form").serialize();
+        //var params = decodeURIComponent(data, true);
+        //var data = $("#form").serializeArray();
+        //var params = JSON.stringify(data);
+
+        var data = $('form').serializeObject();
+        data.CreateBy = userid;
+
+        //获取上传选择的文件
+        var templates = $("#images")[0].files;
+        var formdata = new FormData();
+        for (var i = 0; i < templates.length; i++) {
+            formdata.append("temp" + i, templates[i]);
+        }
+        //将数据添加到formdata中
+        formdata.append("data", JSON.stringify(data));
+
+        postFile(baseUrl+'/wx/invite/upload', formdata, callback);
+    });
+
+    function callback(res) {
+        alert(JSON.stringify(res));
+    }
+</script>

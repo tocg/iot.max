@@ -220,6 +220,31 @@ namespace Iot.Max.Lib
         }
 
         /// <summary>
+        /// 执行存储过程
+        /// </summary>
+        /// <param name="strProcedure">过程名</param>
+        /// <param name="param">参数</param>
+        /// <param name="outParamName"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual int ExecuteStoredProcedure(string strProcedure, DynamicParameters param,string outParamName,out string id)
+        {
+            using (IDbConnection conn = Connection)
+            {
+                try
+                {
+                    var result = conn.Execute(strProcedure, param, null, null, CommandType.StoredProcedure);
+                    id = param.Get<string>(outParamName);
+                    return result > 0 ? 1 : 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
         /// ----------存储过程事务(批量插入)
         /// </summary>
         /// <param name="pairs">Dictionary(string,object) sql-object parm</param>

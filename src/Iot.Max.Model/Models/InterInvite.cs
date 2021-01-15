@@ -21,5 +21,6 @@ namespace Iot.Max.Model.Models
         public string CreateBy { get; set; }
         public string Contacts { get; set; }
         public string CompanyID { get; set; }
+        public string CompanyName { get; set; }
     }
 }

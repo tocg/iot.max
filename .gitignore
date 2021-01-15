@@ -341,3 +341,7 @@ healthchecksdb
 /src/ui/vue-max
 /src/Iot.Max.Api/.config
 /src/Iot.Max.Wx
+/document
+/src/Iot.Max.Api/wwwroot/invite
+/src/Iot.Max.Wx.View/.config
+/src/Iot.Max.Wx.View/Properties

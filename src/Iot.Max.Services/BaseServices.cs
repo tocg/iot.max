@@ -49,6 +49,7 @@ namespace Iot.Max.Services
         {
             return default;
         }
+
         public virtual int Insert<T>(T t)
         {
             int result = 0;
@@ -84,6 +85,45 @@ namespace Iot.Max.Services
                 throw;
             }
             return result;
+        }
+        public virtual int InsertProc<T>(PageParameters<T> parameters) 
+        {
+            int result = -1;
+            if (parameters.Proc != null)
+            {
+                try
+                {
+                    result = DapperClient.ExecuteStoredProcedure(parameters.Proc.ProcName, parameters.Proc.ProcParm);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return result;
+
+        }
+        public virtual int InsertProcOut<T>(PageParameters<T> parameters, out string id)
+        {
+            int result = -1;
+            id = "";
+            if (parameters.Proc != null)
+            {
+                try
+                {
+                    result =  DapperClient.ExecuteStoredProcedure(parameters.Proc.ProcName, parameters.Proc.ProcParm, parameters.Proc.ProcOutName, out id);            
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return result;
+        }
+
+        public virtual int Insert<T>(Dictionary<string, List<T>> parm)
+        {
+            return DapperClient.ExecuteProcedureTransaction(parm);
         }
     }
 }
