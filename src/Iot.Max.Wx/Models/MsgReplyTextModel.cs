@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * 微信消息文本实体
+ * 
+ * **/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +12,7 @@ namespace Iot.Max.Wx.Models
 {
     public class MsgReplyTextModel : MsgReplyModel
     {
-        public string MsgType { get; set; } = "text";
+        public string MsgType { get { return "text"; } }
         public string Content { get; set; }
     }
 }

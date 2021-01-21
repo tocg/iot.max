@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="WxConfig.cs" />
+    <Compile Remove="WxMsg\WxMsgFactory.cs" />
     <Compile Remove="WxWebToken.cs" />
   </ItemGroup>
 

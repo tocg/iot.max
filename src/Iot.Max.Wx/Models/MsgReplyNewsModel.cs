@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * 微信消息图文实体
+ * 
+ * **/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +12,7 @@ namespace Iot.Max.Wx.Models
 {
     public class MsgReplyNewsModel : MsgReplyModel
     {
-        public string MsgType { get; set; } = "news";
+        public string MsgType { get { return "news"; } }
         public int ArticleCount { get; set; }
         public List<WxMsgReplayNewsItemModel> Articles { get; set; }
     }

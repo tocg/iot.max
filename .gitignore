@@ -345,3 +345,4 @@ healthchecksdb
 /src/Iot.Max.Api/wwwroot/invite
 /src/Iot.Max.Wx.View/.config
 /src/Iot.Max.Wx.View/Properties
+/src/Iot.Max.Api/wwwroot/wx
