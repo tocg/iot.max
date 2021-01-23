@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Iot.Max.Admin.Controllers.Retail
 {
-    public class SPUController : Controller
+    public class RetailBrandController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Add()
+
+        public IActionResult Edit()
         {
             return View();
         }

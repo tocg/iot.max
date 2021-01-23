@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "品牌";
+    ViewData["Title"] = "SPU";
     Layout = "~/Views/Shared/_LayuiList.cshtml";
 }
 
@@ -8,7 +8,7 @@
     <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
         <a lay-href="">主页</a><span lay-separator="">/</span>
         <a><cite>零售电商</cite></a><span lay-separator="">/</span>
-        <a><cite>品牌列表</cite></a>
+        <a><cite>SPU列表</cite></a>
     </div>
 </div>
 
@@ -18,7 +18,7 @@
             <div class="layui-row">
 
                 <div class="layui-col-md3">
-                    <h1>品牌列表</h1>
+                    <h1>SPU列表</h1>
                 </div>
                 <div class="layui-col-md9" style="text-align:right;">
                     <div class="layui-form-item">
@@ -56,42 +56,38 @@
     </div>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/http.request.js"></script>
 <script>
     layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function () {
-        var laydate = layui.laydate //日期
-            , laypage = layui.laypage //分页
-            , layer = layui.layer //弹层
+        var layer = layui.layer //弹层
             , table = layui.table //表格
-            , carousel = layui.carousel //轮播
-            , upload = layui.upload //上传
-            , element = layui.element //元素操作
-            , slider = layui.slider //滑块
         var $ = layui.$;
 
         var tableIns = table.render({
             elem: '#demo'
             , height: 520
-            , url: baseUrl + '/retail/brand/query' //数据接口地址
+            , url: baseUrl + '/retail/spu/query' //数据接口地址
             , title: '数据表'
             , page: true //开启分页
             , toolbar: '#toolbarDemo' //开启工具栏，默认值为default
             //, totalRow: true //开启合计行
             , cols: [[ //表头
                 { type: 'checkbox', fixed: 'left' }
-                //, { field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left', totalRowText: '合计：' }
-                , { field: 'brandName', title: '品牌名称', width: 150 }
-                , {
-                    field: 'logo', title: 'LOGO'
-                    , templet: function (d) { return '<div><img src=' + baseUrl + d.logo + '></div>' }
-                }
-                , { field: 'description', title: '介绍' }
+                , { field: 'spuCode', title: 'SPU代码', width: 150 }          
+                , { field: 'title', title: '标题'}
+                , { field: 'brandName', title: '品牌', width: 80 }
+                , { field: 'categoryName', title: '类型', width: 80 }
                 , { field: 'sort', title: '排序', width: 80 }
-                , { field: 'state', title: '状态', width: 80 }
                 , { field: 'createDate', title: '创建日期', width: 180 }
                 , { fixed: 'right', width: 165, align: 'center', toolbar: '#barDemo' }
             ]]
+            ,parseData: function (res) {
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "data": res.data //解析数据列表
+                }
+            }
         });
 
 
@@ -101,33 +97,37 @@
                 , data = checkStatus.data; //获取选中的数据
             switch (obj.event) {
                 case 'add':
+
                     layer.open({
                         type: 2,
                         closeBtn: 1,
-                        title: "编辑品牌",
-                        area: ['750px', '460px'],
-                        content: '/brand/edit',
+                        title: "编辑",
+                        area: ['750px', '450px'],
+                        content: '/retailspu/edit',
+                        //success: function (layero, index) {
+                        //    var body = layer.getChildFrame('body', index);
+                        //    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        //    //console.log(body.html()) //得到iframe页的body内容
+                        //    //console.log("cname:"+body.find('#cname').val());
+                        //    //var p_o = iframeWin.getObj();
+                        //    //console.log("p_o:"+p_o);
+                        //    //layer.full(index);
+                        //    console.log(body);
+                        //}
                     });
+
                     break;
                 case 'delall':
                     if (data.length === 0) {
                         layer.msg('请选择一行');
                     } else {
                         layer.confirm('真的删除行么', function (index) {
-
-                            //用逗号拼接id的方式
-                            //var ids = [];
-                            //$.each(data, function (i, v) {
-                            //    ids.push(v.id);
-                            //});
-                            //layer.msg('批量删除，可将这些id传到后台进行操作。id=' + ids.toString());
-
-                            //List<string>的方式
-                            var ids = new Array();
+                            //获取要删除行的id
+                            var ids = [];
                             $.each(data, function (i, v) {
                                 ids.push(v.id);
                             });
-                            del(ids);
+                            layer.msg('批量删除，可将这些id传到后台进行操作。id=' + ids.toString());
                         });
                     }
                     break;
@@ -141,42 +141,25 @@
             if (layEvent === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     layer.close(index);
-                    var ids = new Array();
-                    ids.push(data.id);
-                    del(ids);
+                    //向服务端发送删除指令
+                    layer.msg('删除,可将id传到后台进行操作。id=' + data.id);
                 });
             } else if (layEvent === 'edit') {
-                layer.open({
-                    type: 2,
-                    closeBtn: 1,
-                    title: "编辑",
-                    area: ['750px', '460px'],
-                    content: '/brand/edit/?id=' + data.id
-                });
+                layer.msg('编辑操作');
             }
         });
 
         $('#btnSearch').on('click', function () {
-            search();
-        });
-
-        function del(data) {
-            post(baseUrl + '/retail/brand/delete', data, function dck(res) {
-                console.log(res);
-                search();
-            });
-        }
-
-        function search() {
             var search = $('#txtSearch').val();
+
             tableIns.reload({
-                where: {
+                where: { //设定异步数据接口的额外参数，任意设
                     search: search
                 }
                 , page: {
-                    curr: 1
+                    curr: 1 //重新从第 1 页开始
                 }
             });
-        }
+        });
     });
 </script>

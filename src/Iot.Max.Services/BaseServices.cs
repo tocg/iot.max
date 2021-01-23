@@ -47,6 +47,13 @@ namespace Iot.Max.Services
 
         public virtual T QueryFirst<T>(string id)
         {
+            var tuple = ReflectionLib.ModelToSelectSql<T>();
+
+            if (tuple.Item1)
+            {
+                return DapperClient.QueryFirst<T>($"{tuple.Item3} where id=@id", new { id });
+            }
+
             return default;
         }
 

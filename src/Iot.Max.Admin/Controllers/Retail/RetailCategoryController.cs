@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Iot.Max.Admin.Controllers.Retail
 {
-    public class CategoryController : Controller
+    public class RetailCategoryController : Controller
     {
         public IActionResult Index()
         {

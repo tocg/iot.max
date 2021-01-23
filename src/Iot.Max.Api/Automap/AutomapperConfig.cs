@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Iot.Max.Api
 {
-    
-    
     public class AutomapperConfig : Profile
     {
         public AutomapperConfig()
         {
-            CreateMap<RetailBrand, RetailBrand>();
+            //CreateMap<RetailBrand, RetailBrand>();
 
-            CreateMap<RetailSPU,RetailSPUDto>();
+            //CreateMap<RetailSPU,RetailSPUDto>();
+
+            CreateMap<InterQuestionCategory, InterQuestionCategoryDto>();
         }
     }
 }

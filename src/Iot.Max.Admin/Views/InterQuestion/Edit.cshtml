@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewData["Title"] = "编辑面试题";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+
+
+
+<style>
+    .layui-form-item .layui-input-inline {
+        width: initial;
+    }
+</style>
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" lay-filter="formEdit">
+            <input type="hidden" value="" id="ID" name="ID" />
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <textarea name="Title" placeholder="请输入标题" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="CategoryID" id="CategoryID">
+                            <option value="">===请选择===</option>
+                            <option value="0">SQL数据存储</option>
+                            <option value="1">算法</option>
+                            <option value="2">ASP.NET C#</option>
+                            <option value="3">NOSQL缓存 大数据 高并发</option>
+                            <option value="4">IQ逻辑题</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">相关图片</label>
+                    <div class="layui-input-block">
+                        <input type="file" id="Images" name="Images" multiple />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">答案</label>
+                <div class="layui-input-block">
+                    <textarea id="Answer"  name="Answer" placeholder="请输入答案" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="sub"><i class="layui-icon layui-icon-ok"></i>  立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+<script>
+    layui.use(['layer', 'form', 'layedit'], function () {
+        var layer = layui.layer //弹层
+            , form = layui.form;
+        var layedit = layui.layedit;
+        var $ = layui.$;
+
+        //建立编辑器
+        var edit1 = layedit.build('Answer',
+            {
+                height: 210 //设置编辑器高度
+            }); 
+
+        form.on('submit(sub)', function (data) {
+            //console.log(data);
+            //var data1 = form.val("formEdit");
+            //console.log(data1);
+            //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            //console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            //获取上传选择的文件
+            var templates = $("#Images")[0].files;
+            var formdata = new FormData();
+            for (var i = 0; i < templates.length; i++) {
+                formdata.append("temp" + i, templates[i]);
+            }
+
+            data.field.Answer = layedit.getContent(edit1);
+
+            //将数据添加到formdata中
+            formdata.append("data", JSON.stringify(data.field));
+
+            postFile(baseUrl + '/inter/question/edit', formdata, postCallback);
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+        //返填
+        $.get(baseUrl + '/inter/question/' + getQueryVariable("id"), function (res) {
+            console.log(res);
+            form.val("formEdit", {
+                ID: res.data.id,
+                Title: res.data.title,
+                Answer: res.data.answer,
+                CategoryID: res.data.categoryID
+            });
+
+            $('#Answer').val(res.data.answer);
+            edit1 = layedit.build('Answer',
+                {
+                    height: 210 //设置编辑器高度
+                }); 
+        });
+
+        $('#btnOk').on('click', function () {
+            //获取表单区域所有值
+            var data = form.val("formEdit");
+
+            //获取上传选择的文件
+            var templates = $("#logo")[0].files;
+            var formdata = new FormData();
+            for (var i = 0; i < templates.length; i++) {
+                formdata.append("temp" + i, templates[i]);
+            }
+
+            //将数据添加到formdata中
+            formdata.append("data", JSON.stringify(data));
+
+            //提交数据。由callback来处理服务器返回的数据
+            postFile(baseUrl + '/retail/brand/edit', formdata, postCallback);
+
+        });
+
+        //处理提交服务器返回的结果
+        function postCallback(res) {
+
+            layer.msg(res.msg);
+            //ajax保存数据
+            if (res.code == 0 || res.code == 200) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layui.table.reload('tableID');//重载父页表格，参数为表格ID
+                parent.layer.close(index);
+            }
+        }
+    });
+</script>
+
+
+

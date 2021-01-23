@@ -10,6 +10,7 @@
  * 
  * **/
 
+using AutoMapper;
 using Iot.Max.Lib;
 using Iot.Max.Services;
 using log4net;
@@ -50,6 +51,9 @@ namespace Iot.Max.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //添加对AutoMapper的支持
+            services.AddAutoMapper(typeof(AutomapperConfig));
 
             #region 自带Swagger
 

@@ -227,7 +227,7 @@ namespace Iot.Max.Common
                 {
                     _strField.Append($"{pi.Name},");
                 }
-                string _strSql = $"select {_strField.ToString().TrimEnd(',')}) from {tableName})";
+                string _strSql = $"select {_strField.ToString().TrimEnd(',')} from {tableName}";
                 dto.Data = _strSql;
             }
             catch (Exception ex)
@@ -341,24 +341,24 @@ namespace Iot.Max.Common
                             case "datetime":
                                 _strValue = Convert.ToDateTime(_objValue).ToString("yyyy-MM-dd HH:mm:ss");
                                 if (!_strValue.Equals("0001-01-01 00:00:00"))
-                                    _strSet.Append($"{_strField} = @'{_strField}',");
+                                    _strSet.Append($"{_strField} = @{_strField},");
                                 break;
                             case "guid":
                                 Guid? guid = Guid.Parse(Convert.ToString(_objValue));
                                 if (guid != null && guid.HasValue)
-                                    _strSet.Append($"{_strField} = @'{_strField}',");
+                                    _strSet.Append($"{_strField} = @{_strField},");
                                 break;
                             default:
                                 if (!_strField.ToLower().Equals(sKey.ToLower()))
                                 {
-                                    _strSet.Append($"{_strField} = @'{_strField}',");
+                                    _strSet.Append($"{_strField} = @{_strField},");
                                 }
                                 break;
                         }
                     }
                     else if (_objValue != null && pi.Name.ToLower().Equals(sKey))
                     {
-                        _strWhere.Append($"{_strField} = '{_strField}'");
+                        _strWhere.Append($"{_strField} = @{_strField}");
                     }
 
                 }
