@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "编辑面试题";
+    ViewData["Title"] = "编辑高频问题";
     Layout = "~/Views/Shared/_LayuiList.cshtml";
 }
 
@@ -19,10 +19,9 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">标题</label>
                 <div class="layui-input-block">
-                    <textarea name="Title" placeholder="请输入标题" class="layui-textarea"></textarea>
+                    <textarea name="Title" id="Title" placeholder="请输入标题" class="layui-textarea"></textarea>
                 </div>
             </div>
-
             <div class="layui-form-item">
                 <div class="layui-input-inline">
                     <label class="layui-form-label">类型</label>
@@ -34,10 +33,12 @@
                             <option value="2">ASP.NET C#</option>
                             <option value="3">NOSQL缓存 大数据 高并发</option>
                             <option value="4">IQ逻辑题</option>
+                            <option value="5">人事问题</option>
+                            <option value="6">其它相关</option>
                         </select>
                     </div>
                 </div>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="display:none;">
                     <label class="layui-form-label">相关图片</label>
                     <div class="layui-input-block">
                         <input type="file" id="Images" name="Images" multiple />
@@ -45,9 +46,9 @@
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">答案</label>
+                <label class="layui-form-label">回答</label>
                 <div class="layui-input-block">
-                    <textarea id="Answer"  name="Answer" placeholder="请输入答案" class="layui-textarea"></textarea>
+                    <textarea id="Answer" name="Answer" placeholder="请输入详细解答" class="layui-textarea"></textarea>
                 </div>
             </div>
 
@@ -72,10 +73,14 @@
         var $ = layui.$;
 
         //建立编辑器
+        var edit0 = layedit.build('Title',
+            {
+                height: 120 //设置编辑器高度
+            });
         var edit1 = layedit.build('Answer',
             {
-                height: 210 //设置编辑器高度
-            }); 
+                height: 180 //设置编辑器高度
+            });
 
         form.on('submit(sub)', function (data) {
             //console.log(data);
@@ -92,6 +97,7 @@
                 formdata.append("temp" + i, templates[i]);
             }
 
+            data.field.Title = layedit.getContent(edit0);
             data.field.Answer = layedit.getContent(edit1);
 
             //将数据添加到formdata中
@@ -102,24 +108,32 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
+        var id = getQueryVariable("id");
 
-        //返填
-        $.get(baseUrl + '/inter/question/' + getQueryVariable("id"), function (res) {
-            console.log(res);
-            form.val("formEdit", {
-                ID: res.data.id,
-                Title: res.data.title,
-                Answer: res.data.answer,
-                CategoryID: res.data.categoryID
+        if (id.length > 0) {
+            //返填
+            $.get(baseUrl + '/inter/question/' + id, function (res) {
+                console.log(res);
+                form.val("formEdit", {
+                    ID: res.data.id,
+                    Title: res.data.title,
+                    Answer: res.data.answer,
+                    CategoryID: res.data.categoryID
+                });
+
+                $('#Title').val(res.data.title);
+                edit0 = layedit.build('Title',
+                    {
+                        height: 120 //设置编辑器高度
+                    });
+                $('#Answer').val(res.data.answer);
+                edit1 = layedit.build('Answer',
+                    {
+                        height: 180 //设置编辑器高度
+                    });
             });
-
-            $('#Answer').val(res.data.answer);
-            edit1 = layedit.build('Answer',
-                {
-                    height: 210 //设置编辑器高度
-                }); 
-        });
-
+        }
+        //按钮事件，直接用表单submit替代了
         $('#btnOk').on('click', function () {
             //获取表单区域所有值
             var data = form.val("formEdit");

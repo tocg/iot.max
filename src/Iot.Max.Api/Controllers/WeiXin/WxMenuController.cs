@@ -70,6 +70,11 @@ namespace Iot.Max.Api.Controllers.WeiXin
                                 ""name"":""面试宝典"",  
                                 ""sub_button"":[  
                                 {  
+                                    ""type"":""view"",  
+                                    ""name"":""高频问题"",  
+                                    ""url"":""{0}http://wx.iot.lcvue.com/question/index{1}""
+                                },
+                                {  
                                     ""type"":""click"",  
                                     ""name"":""技能复习"",  
                                     ""key"":""BUTTON_SKILL""

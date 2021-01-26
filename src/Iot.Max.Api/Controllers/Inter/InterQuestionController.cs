@@ -2,6 +2,7 @@
 using Dapper;
 using Iot.Max.Common;
 using Iot.Max.Lib;
+using Iot.Max.Model.Dtos;
 using Iot.Max.Model.Models;
 using Iot.Max.Services;
 using log4net;
@@ -65,6 +66,37 @@ namespace Iot.Max.Api.Controllers.Inter
             }
             return Ok(result);
         }
+
+
+        [HttpGet("list")]
+        public IActionResult List(int page = 1, int limit = 20, string key = "")
+        {
+            var result = new PageResultDto();
+            try
+            {
+                DynamicParameters parm = new DynamicParameters();
+                parm.Add("search", key);
+                parm.Add("page", page);
+                parm.Add("size", limit);
+                parm.Add("@count", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+                var par = new PageParameters<InterQuestionDto>();
+                par.Proc = new PageProc { ProcName = "pr_inter_question_wxlist", ProcParm = parm, ProcOutName = "count" };
+
+                var list = _services.Query(par, out int outCount);
+
+                result.Data = list;
+                result.Count = outCount;
+            }
+            catch (Exception ex)
+            {
+                result.Code = (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Msg = "内部操作错误，请联系管理员或查看错误日志。";
+                log.Error($"/{System.Reflection.MethodBase.GetCurrentMethod().Name}方法/错误信息：【{ex.Message}】");
+            }
+            return Ok(result);
+        }
+
 
         [HttpGet("{id}")]
         public IActionResult Query(string id)
