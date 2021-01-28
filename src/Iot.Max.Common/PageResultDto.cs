@@ -18,8 +18,9 @@ namespace Iot.Max.Common
     {
         public int Code { get; set; } = (int)ResultCode.LAYUISUCCESS;  //状态码
         public string Msg { get; set; } = "Success";//提示消息
-        public dynamic Data { get; set; } = null;//返回数据
         public int Count { get; set; } = 0;//总记录数
+
+        public dynamic Data { get; set; } = null;//返回数据
 
         public PageResultDto SetResult(int code, string msg, int count, dynamic datas)
         {

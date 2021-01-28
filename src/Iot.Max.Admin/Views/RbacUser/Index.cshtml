@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewData["Title"] = "RBAC用户列表";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+        <a lay-href="">主页</a><span lay-separator="">/</span>
+        <a><cite>RBAC管理</cite></a><span lay-separator="">/</span>
+        <a><cite>用户列表</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-row">
+
+                <div class="layui-col-md3">
+                    <h1>用户列表</h1>
+                </div>
+                <div class="layui-col-md9" style="text-align:right;">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">查询条件</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="search" id="txtSearch" lay-verify="required|search" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width:unset;">
+                                <button class="layui-btn layui-btn-warm" id="btnSearch" data-type="search"><i class="layui-icon layui-icon-search"></i> 查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table class="layui-hide" id="tableID" lay-filter="tableFilter"></table>
+
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container demoTable">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal " lay-event="add"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delall" data-type="getCheckData"><i class="layui-icon layui-icon-delete"></i> 删除</button>
+                </div>
+            </script>
+
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+<script>
+    layui.use([ 'laypage', 'layer', 'table',], function () {
+        var layer = layui.layer //弹层
+            , table = layui.table //表格
+        var $ = layui.$;
+
+        var tableIns = table.render({
+            elem: '#tableID'
+            , height: 520
+            , url: baseUrl + '/rbac/user/query' //数据接口地址
+            , title: '数据表'
+            , page: true //开启分页
+            , toolbar: '#toolbarDemo' //开启工具栏，默认值为default
+            //, totalRow: true //开启合计行
+            , cols: [[ //表头
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'userName', title: '登录名'}
+                , { field: 'userPass', title: '登录密码', width: 180 }
+                , { field: 'state', title: '用户状态', width: 180 }
+                , { field: 'createDate', title: '创建日期', width: 180 }
+                , { fixed: 'right', width: 165, align: 'center', toolbar: '#barDemo' }
+            ]]
+        });
+
+
+        //监听头工具栏事件(添加及删除事件)
+        table.on('toolbar(tableFilter)', function (obj) { //test对应table中的lay-filter属性
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+                    perContent = layer.open({
+                        type: 2,
+                        closeBtn: 1,
+                        maxmin: true,
+                        title: "编辑",
+                        area: ['650px', '300px'],
+                        content: '/rbacuser/edit',
+                    });
+                    break;
+                case 'delall':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('真的删除行么', function (index) {
+                            //获取要删除行的id
+                            var ids = [];
+                            $.each(data, function (i, v) {
+                                ids.push(v.id);
+                            });
+                            del(ids);
+                            //layer.msg('批量删除，可将这些id传到后台进行操作。id=' + ids.toString());
+                        });
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件（编辑及删除事件）
+        table.on('tool(tableFilter)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data,layEvent = obj.event; 
+            if (layEvent === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    layer.close(index);
+                    var ids = new Array();
+                    ids.push(data.id);
+                    del(ids);
+                });
+            } else if (layEvent === 'edit') {
+                perContent = layer.open({
+                    type: 2,
+                    closeBtn: 1,
+                    maxmin: true,
+                    title: "编辑",
+                    area: ['650px', '300px'],
+                    content: '/rbacuser/edit/?id=' + data.id
+                });
+
+                //layer.full(perContent);
+            }
+        });
+
+
+        $('#btnSearch').on('click', function () {
+            search();
+        });
+
+
+        function del(data) {
+            post(baseUrl + '/rbac/user/delete', data, function dck(res) {
+                console.log(res);
+                search();
+            });
+        }
+
+        function search() {
+            var search = $('#txtSearch').val();
+            tableIns.reload({
+                where: {
+                    search: search
+                }
+                , page: {
+                    curr: 1
+                }
+            });
+        }
+    });
+</script>
+

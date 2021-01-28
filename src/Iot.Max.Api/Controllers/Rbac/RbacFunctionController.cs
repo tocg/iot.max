@@ -13,14 +13,14 @@ using System.Threading.Tasks;
 
 namespace Iot.Max.Api.Controllers.Rbac
 {
-    [Route("rbac/user")]
+    [Route("rbac/function")]
     [ApiController]
-    public class RbacUserController : ControllerBase
+    public class RbacFunctionController : ControllerBase
     {
-        private readonly ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(RbacUserController));
+        private readonly ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(RbacFunctionController));
         private readonly DapperClientHelper _dapper;
         readonly IServices _services;
-        public RbacUserController(IDapperFactory dapperFactory, IServices services)
+        public RbacFunctionController(IDapperFactory dapperFactory, IServices services)
         {
             _dapper = dapperFactory.CreateClient();
             _services = services;
@@ -40,8 +40,8 @@ namespace Iot.Max.Api.Controllers.Rbac
                 parm.Add("size", limit);
                 parm.Add("@count", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
 
-                var par = new PageParameters<RbacUser>();
-                par.Proc = new PageProc { ProcName = "pr_rbac_user_list", ProcParm = parm, ProcOutName = "count" };
+                var par = new PageParameters<RbacFunction>();
+                par.Proc = new PageProc { ProcName = "pr_rbac_function_list", ProcParm = parm, ProcOutName = "count" };
 
                 var list = _services.Query(par, out int outCount);
 
@@ -64,7 +64,7 @@ namespace Iot.Max.Api.Controllers.Rbac
             try
             {
                 result.Code = (int)ResultCode.SUCCESS;
-                result.Data = _services.QueryFirst<RbacUser>(id);
+                result.Data = _services.QueryFirst<RbacFunction>(id);
                 result.Count = 1;
             }
             catch (Exception ex)
@@ -82,10 +82,10 @@ namespace Iot.Max.Api.Controllers.Rbac
             var result = new PageResultDto();
             try
             {
-                List<RbacUser> parm = new List<RbacUser>();
+                List<RbacFunction> parm = new List<RbacFunction>();
                 foreach (var item in ids)
                 {
-                    parm.Add(new RbacUser { ID = item });
+                    parm.Add(new RbacFunction { ID = item });
                 }
                 var i = _services.Delete(parm);
 
@@ -103,11 +103,11 @@ namespace Iot.Max.Api.Controllers.Rbac
         }
 
         [HttpPost("edit")]
-        public IActionResult Edit(RbacUser model)
+        public IActionResult Edit(RbacFunction model)
         {
             var result = new PageResultDto();
 
-            if (model == null || string.IsNullOrEmpty(model.UserName))
+            if (model == null || string.IsNullOrEmpty(model.Name))
             {
                 result.Code = (int)ResultCode.UNAUTHORIZED;
                 result.Msg = "参数无效";

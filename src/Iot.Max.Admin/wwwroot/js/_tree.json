@@ -1,0 +1,36 @@
+{
+  "code": 0,
+  "msg": "",
+  "data": [
+    {
+      "authorityId": 1,
+      "authorityName": "sys manage",
+      "menuUrl": null,
+      "authority": null,
+      "parentId": 0,
+      "open": true
+    },
+    {
+      "authorityId": 2,
+      "authorityName": "user manage",
+      "menuUrl": "system/user",
+      "authority": null,
+      "parentId": 1,
+      "open": true
+    },
+    {
+      "authorityId": 3,
+      "authorityName": "query user",
+      "menuUrl": "",
+      "authority": "user:view",
+      "parentId": 2
+    },
+    {
+      "authorityId": 4,
+      "authorityName": "add user",
+      "menuUrl": null,
+      "authority": "user:add",
+      "parentId": 2
+    }
+  ]
+}

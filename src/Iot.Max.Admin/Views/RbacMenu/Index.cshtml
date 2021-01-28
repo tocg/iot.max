@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewData["Title"] = "RBAC菜单列表";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+        <a lay-href="">主页</a><span lay-separator="">/</span>
+        <a><cite>RBAC管理</cite></a><span lay-separator="">/</span>
+        <a><cite>RBAC菜单列表</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-row">
+
+                <div class="layui-col-md3">
+                    <h1>RBAC菜单列表</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            @*class="layui-hide"*@
+            <table id="tableID" lay-filter="tableFilter"></table>
+
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container demoTable">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal " lay-event="add"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delall" data-type="getCheckData"><i class="layui-icon layui-icon-delete"></i> 删除</button>
+                </div>
+            </script>
+
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" title="删除"><i class="layui-icon layui-icon-delete"></i></a>
+
+                {{#  if(d.menuType === "click"){ }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="set" title="配置子菜单"><i class="layui-icon layui-icon-set-fill"></i></a>
+                {{#  } }}
+
+            </script>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+
+<script>
+
+    //treeTable.js
+    //文档：https://whvse.gitee.io/treetable-lay/
+    layui.config({
+        base: '/js/'
+    })
+
+    layui.use(['treeTable', 'table'], function () {
+        var $ = layui.jquery;
+        var treeTable = layui.treeTable;
+        var table = layui.table;
+
+        // 渲染树形表格
+        var tableIns = treeTable.render({
+            elem: '#tableID',
+            height: '400',
+            //url: '/js/tree.json',
+            url: baseUrl + '/rbac/menu/query',
+            toolbar: '#toolbarDemo',
+            tree: {
+                iconIndex: 2,           // 折叠图标显示在第几列
+                isPidData: true,        // 是否是id、pid形式数据
+                idName: 'id',  // id字段名称
+                pidName: 'supID'     // pid字段名称
+            },
+            cols: [[
+                { type: 'numbers' },
+                { type: 'checkbox' },
+                { field: 'title', title: '名称', width: 260 },
+                { field: 'url', title: '链接/按钮值' },
+                { field: 'target', title: '目标', width: 160 },
+                { field: 'icon', title: '图标', width: 160 },
+                { field: 'createDate', title: '创建日期', width: 180 },
+                { fixed: 'right', width: 165, align: 'center', toolbar: '#barDemo' }
+            ]]
+        });
+
+        //监听头工具栏事件(添加及删除事件)
+        treeTable.on('toolbar(tableID)', function (obj) { //test对应table中的lay-filter属性
+
+            var checkStatus = table.checkStatus(obj.config)
+                , data = checkStatus.data; //获取选中的数据
+            console.log(data);
+            switch (obj.event) {
+                case 'add':
+                    perContent = layer.open({
+                        type: 2,
+                        closeBtn: 1,
+                        maxmin: true,
+                        title: "编辑",
+                        area: ['850px', '680px'],
+                        content: '/rbacmenu/edit',
+                    });
+                    layer.full(perContent);
+                    break;
+                case 'delall':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('真的删除行么', function (index) {
+                            //获取要删除行的id
+                            var ids = [];
+                            $.each(data, function (i, v) {
+                                ids.push(v.id);
+                            });
+                            layer.msg('批量删除，可将这些id传到后台进行操作。id=' + ids.toString());
+                        });
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件（编辑及删除事件）
+        treeTable.on('tool(tableID)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            console.log('tool  ' + obj);
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    layer.close(index);
+                    var ids = new Array();
+                    ids.push(data.id);
+                    del(ids);
+                });
+            } else if (layEvent === 'edit') {
+                perContent = layer.open({
+                    type: 2,
+                    closeBtn: 1,
+                    maxmin: true,
+                    title: "编辑",
+                    area: ['850px', '680px'],
+                    content: '/rbacmenu/edit/?id=' + data.id
+                });
+                layer.full(perContent);
+            }
+        });
+
+
+        function del(data) {
+            post(baseUrl + '/rbac/menu/delete', data, function dck(res) {
+                console.log(res);
+                search();
+            });
+        }
+    });
+</script>
+
+

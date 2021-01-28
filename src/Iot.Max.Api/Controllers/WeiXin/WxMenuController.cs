@@ -2,6 +2,11 @@
  * 自定义微信菜单
  * 
  * **/
+using Dapper;
+using Iot.Max.Common;
+using Iot.Max.Lib;
+using Iot.Max.Model.Models;
+using Iot.Max.Services;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +22,14 @@ namespace Iot.Max.Api.Controllers.WeiXin
     public class WxMenuController : ControllerBase
     {
         private ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(WxMenuController));
+        private readonly DapperClientHelper _dapper;
+        readonly IServices _services;
+        public WxMenuController(IDapperFactory dapperFactory, IServices services)
+        {
+            _dapper = dapperFactory.CreateClient();
+            _services = services;
+            _services.DapperClient = _dapper;
+        }
 
         [HttpGet("create")]
         public IActionResult GetCreate()
@@ -38,12 +51,11 @@ namespace Iot.Max.Api.Controllers.WeiXin
 
 
         /// <summary>
-        /// 菜单数据
+        /// 菜单数据(测试数据)
         /// </summary>
         /// <returns>输出微信的json格式</returns>
         private static string TestMenu()
         {
-
             //菜单view是指单击后跳转到指定的页面(要获取openid需微信中设置回调域名【功能服务】-【网页账号】-修改)
             //菜单click是指单击后，根据获取到的key获取内容并在微信内显示
 
@@ -111,5 +123,127 @@ namespace Iot.Max.Api.Controllers.WeiXin
             return strMenu;
         }
 
+        //从数据库中获取数菜单数据(拼接成json格式)
+        private  string DbMenuToJson()
+        {
+            string result = "";
+            var par = new PageParameters<WxMenu>();
+            par.Model = new WxMenu();
+            var list = _services.Query(par);
+
+            if (list == null || list.Count == 0)
+                return result;
+
+            return result;
+        }
+
+
+        [HttpGet("query")]
+        public IActionResult Query()
+        {
+            var result = new PageResultDto();
+            try
+            {
+                var par = new PageParameters<WxMenu>();
+                par.Model = new WxMenu();
+
+                var list = _services.Query(par);
+
+                result.Data = list;
+                result.Count = list.Count;
+            }
+            catch (Exception ex)
+            {
+                result.Code = (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Msg = "内部操作错误，请联系管理员或查看错误日志。";
+                log.Error($"/{System.Reflection.MethodBase.GetCurrentMethod().Name}方法/错误信息：【{ex.Message}】");
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Query(string id)
+        {
+            var result = new PageResultDto();
+            try
+            {
+                result.Code = (int)ResultCode.SUCCESS;
+                result.Data = _services.QueryFirst<WxMenu>(id);
+                result.Count = 1;
+            }
+            catch (Exception ex)
+            {
+                result.Code = (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Msg = "内部操作错误，请联系管理员或查看错误日志。";
+                log.Error($"/{System.Reflection.MethodBase.GetCurrentMethod().Name}方法/错误信息：【{ex.Message}】");
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("delete")]
+        public IActionResult Delete(List<string> ids)
+        {
+            var result = new PageResultDto();
+            try
+            {
+                List<WxMenu> parm = new List<WxMenu>();
+                foreach (var item in ids)
+                {
+                    parm.Add(new WxMenu { ID = item });
+                }
+                var i = _services.Delete(parm);
+
+                result.Code = i == 0 ? (int)ResultCode.SUCCESS : (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Count = ids.Count;
+                result.Data = ids;
+            }
+            catch (Exception ex)
+            {
+                result.Code = (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Msg = "内部操作错误，请联系管理员或查看错误日志。";
+                log.Error($"/{System.Reflection.MethodBase.GetCurrentMethod().Name}方法/错误信息：【{ex.Message}】");
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("edit")]
+        public IActionResult Edit(WxMenu model)
+        {
+            var result = new PageResultDto();
+
+            if (model == null || string.IsNullOrEmpty(model.Name))
+            {
+                result.Code = (int)ResultCode.UNAUTHORIZED;
+                result.Msg = "参数无效";
+
+                return Ok(result);
+            }
+
+            model.State = model.State == "on" ? "0" : "1";
+
+            int res;
+            try
+            {
+                if (!string.IsNullOrEmpty(model.ID) && !model.ID.ToString().ToLower().Equals("string"))
+                {
+                    res = _services.Update(model);
+                }
+                else
+                {
+                    SnowFlakeWork snowFlake = new SnowFlakeWork(1);
+                    model.ID = snowFlake.NextID().ToString();
+                    res = _services.Insert(model);
+                }
+                result.Count = res > 0 ? 1 : 0;
+            }
+            catch (Exception ex)
+            {
+                result.Code = (int)ResultCode.INTERNAL_SERVER_ERROR;
+                result.Msg = "内部操作错误，请联系管理员或查看错误日志。";
+                log.Error($"/{System.Reflection.MethodBase.GetCurrentMethod().Name}方法/错误信息：【{ex.Message}】");
+            }
+
+            return Ok(result);
+        }
     }
 }

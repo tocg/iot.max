@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewData["Title"] = "编辑微信菜单";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+
+
+<style>
+    .layui-form-item .layui-input-inline {
+        width: initial;
+    }
+</style>
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" lay-filter="formEdit">
+            <input type="hidden" value="" id="ID" name="ID" />
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">所属菜单</label>
+                    <div class="layui-input-inline">
+                        <select name="SupID" id="SupID">
+                            <option value="0">一级菜单</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input name="Name" id="Name" placeholder="请输入菜单名称" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="MenuType" id="MenuType">
+                            <option value="">一级菜单</option>
+                            <option value="click">CLICK</option>
+                            <option value="view">VIEW</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">链接/KEY</label>
+                <div class="layui-input-block">
+                    <input name="MenuTypeValue" id="MenuTypeValue" placeholder="请输入对应的类型Value" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-inline">
+                        <input name="Sort" id="Sort" placeholder="请输入排序号" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册查看</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="IsReg" title="是否需要注册才能查看" lay-skin="primary">  <span></span>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="sub"><i class="layui-icon layui-icon-ok"></i>  立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer //弹层
+            , form = layui.form;
+        var $ = layui.$;
+
+
+        $.get(baseUrl+'/wx/menu/query', function (res) {
+            var data = res.data;
+            var q = eval(data).filter(function (e) { return e.supID == '0'; })           
+            $.each(q, function (i, v) {
+                $('#SupID').append(new Option(v.name, v.id));
+            })
+
+            layui.form.render("select");
+        })
+
+        form.on('submit(sub)', function (data) {
+
+            post(baseUrl + '/wx/menu/edit', data.field, postCallback);
+
+            return false; //阻止表单跳转
+        });
+
+        function postCallback(res) {
+
+            layer.msg(res.msg);
+
+            if (res.code == 0 || res.code == 200) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layui.table.reload('tableID');//重载父页表格，参数为表格ID
+                parent.layer.close(index);
+            }
+        }
+    })
+</script>

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+<style>
+    .layui-form {
+        padding: 20px 100px 20px 20px;
+        background: #fff;
+    }
+</style>
+
+<form class="layui-form" action="" lay-filter="form">
+    <input type="hidden" value="" id="ID" name="ID" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录名</label>
+        <div class="layui-input-block">
+            <input type="text" name="UserName" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码框</label>
+        <div class="layui-input-inline">
+            <input type="password" name="UserPass" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">数字、字母、字符结合</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">立即启用</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="State" lay-skin="switch" checked>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer,form = layui.form;
+        var $ = layui.$;
+
+        //返填
+        var id = getQueryVariable("id");
+        if (id.length > 0) {
+            $.get(baseUrl + '/rbac/user/' + id, function (res) {
+                console.log(res);
+                form.val("form", {
+                    ID: res.data.id,
+                    UserName: res.data.userName,
+                    UserPass: res.data.userPass,
+                    State: res.data.state
+                });
+            });
+        }
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            post(baseUrl + '/rbac/user/edit', data.field, postCallback);
+            return false;
+        });
+
+        //提交回调
+        function postCallback(res) {
+            layer.msg(res.msg);
+            if (res.code == 0 || res.code == 200) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layui.table.reload('tableID');//重载父页表格，参数为表格ID
+                parent.layer.close(index);
+            }
+        }
+    });
+</script>
+
