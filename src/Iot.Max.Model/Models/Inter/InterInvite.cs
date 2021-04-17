@@ -10,6 +10,9 @@ namespace Iot.Max.Model.Models
     [Table("inter_invite")]
     public class InterInvite
     {
+
+
+
         public DateTime? UpdateDate { get; set; }
         public string UpdateBy { get; set; }
         public string Times { get; set; }
