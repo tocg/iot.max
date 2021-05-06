@@ -5,6 +5,7 @@
  * **/
 
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,12 +18,18 @@ namespace Iot.Max.Api.Controllers.Sms
     /// <summary>
     /// 
     /// </summary>
+    [Authorize]
     [Route("sms")]
     [ApiController]
     public class SMSController : ControllerBase
     {
         private ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(SMSController));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
         [HttpGet("send")]
         public IActionResult Send(string phone)
         {
@@ -32,7 +39,7 @@ namespace Iot.Max.Api.Controllers.Sms
             }
             catch (Exception ex)
             {
-                log.Error("api/sms/send/ error : "+ex.Message);
+                log.Error("sms/send/ error : "+ex.Message);
             }
 
             return Ok(phone);

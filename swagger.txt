@@ -1,0 +1,8 @@
+swagger在.net core api 5.0中自带
+配置xml注释显示
+1、项目属性-生成中，勾选生成xml文档
+2、错误和警告 - 取消显示警告中添加1591端口，这是取消未添加xml注释的警告
+3、在startup.cs的ConfigureServices方法中，添加配置
+        var basePath = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
+        var xmlPath = System.IO.Path.Combine(basePath, "Iot.Max.Api.xml"); //Iot.Max.Api.xml为第一步勾选中显示的名字
+        c.IncludeXmlComments(xmlPath);

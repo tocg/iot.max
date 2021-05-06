@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Iot.Max.Api</name>
+    </assembly>
+    <members>
+        <member name="T:Iot.Max.Api.Controllers.AuthenticationController">
+            <summary>
+            身份认证
+            </summary>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.AuthenticationController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.AuthenticationController.RequestToken(Iot.Max.Model.Models.Token.LoginRequestDTO)">
+            <summary>
+            //请求token
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.AuthenticationController.RefreshToken(Iot.Max.Model.Models.Token.RefreshTokenDTO)">
+            <summary>
+            //刷新token
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Iot.Max.Api.Controllers.Retail.RetailBrandController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Iot.Max.Api.Controllers.Retail.RetailSpuController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Iot.Max.Api.Controllers.Sms.SMSController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.Sms.SMSController.Send(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.Sms.SMSController.SendMany(System.Collections.Generic.List{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="phones"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.WeiXin.WxController.Service">
+            <summary>
+            微信回调统一接口
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.WeiXin.WxController.MakeSign(System.String[])">
+            <summary>
+            生成签名
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.WeiXin.WxController.MakeMsgSign(System.String[])">
+            <summary>
+            生成消息签名
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.WeiXin.WxMenuController.TestMenu">
+            <summary>
+            菜单数据(测试数据)
+            </summary>
+            <returns>输出微信的json格式</returns>
+        </member>
+        <member name="M:Iot.Max.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>

@@ -4,6 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\StudyDemo\IOT.Max\Iot.Max\src\Iot.Max.Api\Iot.Max.Api.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Controllers\WeiXin\MsgHandler\TextHandler.cs" />
     <Compile Remove="Controllers\WeiXin\_WxControllerss.cs" />

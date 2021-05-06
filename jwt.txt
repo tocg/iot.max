@@ -1,0 +1,101 @@
+jwt:json web token
+1、配置jwt需要的参数（密钥、过期时间等），放在appsettings.json中
+  "tokenParameter": {
+    "secret": "abcd1234qwer5678lkjm0987",
+    "issuer": "LiangCaiGen",
+    "accessExpiration": 120,
+    "refreshExpiration": 1440
+  }
+
+  可在构造函数中获取配置文件内容
+  var config = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+  _tokenParameter = config.GetSection("tokenParameter").Get<TokenParameter>();
+
+2、生成密钥
+    //_tokenParameter为第一步获取配置文件的对象（model实体类）
+    //生成token
+    private string GenUserToken(string username, string role)
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role),
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenParameter.Secret));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var jwtToken = new JwtSecurityToken(
+            _tokenParameter.Issuer,
+            null,
+            claims,
+            expires: DateTime.UtcNow.AddMinutes(_tokenParameter.AccessExpiration),
+            signingCredentials: credentials);
+
+        var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+
+        return token;
+    }
+
+3、验证token是否正确，在startup.cs中的ConfigureServices方法里配置
+
+    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(option =>
+    {
+        option.RequireHttpsMetadata = false;  //是否必须用https协议
+        option.SaveToken = true;  //生成token,是否保存到上下文中，并向后传递
+
+        //生成token的一些参数验证，都从配置文件中获取
+        var token = Configuration.GetSection("tokenParameter").Get<TokenParameter>();
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(token.Secret)),
+            ValidIssuer = token.Issuer,
+            ValidateIssuer = true,
+            ValidateAudience = false,
+        };
+    });
+
+4、在startup.cs中的Configure方法中，启用身份验证
+
+    app.UseAuthentication(); //启用身份验证
+
+5、在要对控制器或方法需要验证的地方添加关键特性
+  [Authorize]
+
+
+
+/===============================================/
+扩展：在swagger中启用jwt
+1、在startup.cs中的swagger配置中，添加：
+    #region 在swagger中添加授权认证的测试
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "",
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+    #endregion
+
+2、在swagger页面中，添加token时，前面需要添加Bearer空格+token

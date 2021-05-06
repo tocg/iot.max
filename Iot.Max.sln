@@ -17,12 +17,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Admin", "src\Iot.Ma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "document", "document", "{F45E7CAA-F6B9-47F5-B199-38194834A485}"
 	ProjectSection(SolutionItems) = preProject
+		jwt.txt = jwt.txt
 		document\readme.txt = document\readme.txt
+		swagger.txt = swagger.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Wx", "src\Iot.Max.Wx\Iot.Max.Wx.csproj", "{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Max.Wx.View", "src\Iot.Max.Wx.View\Iot.Max.Wx.View.csproj", "{3F2A50B7-6808-4575-9784-60C08FB34CAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Wx.View", "src\Iot.Max.Wx.View\Iot.Max.Wx.View.csproj", "{3F2A50B7-6808-4575-9784-60C08FB34CAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

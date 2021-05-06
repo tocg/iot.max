@@ -12,10 +12,12 @@
 
 using AutoMapper;
 using Iot.Max.Lib;
+using Iot.Max.Model.Models.Token;
 using Iot.Max.Services;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +25,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Iot.Max.Api
@@ -45,6 +49,7 @@ namespace Iot.Max.Api
 
         }
 
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -60,6 +65,42 @@ namespace Iot.Max.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Iot.Max.Api", Version = "v1" });
+
+                #region 为Swagger JSON and UI设置xml文档注释路径
+                //（在这之前需要【项目】-【属性】-【生成】勾选xml文档）
+
+                //获取应用程序所在目录（绝对，不受工作目录影响，建议采用此方法获取路径）
+                var basePath = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                var xmlPath = System.IO.Path.Combine(basePath, "Iot.Max.Api.xml");
+                c.IncludeXmlComments(xmlPath);
+                #endregion
+
+                #region 在swagger中添加授权认证的测试
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "",
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+                #endregion
             });
             #endregion
 
@@ -107,8 +148,33 @@ namespace Iot.Max.Api
                 options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeNullableConverter());
             });
             #endregion
+
+            #region JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(option =>
+            {
+                option.RequireHttpsMetadata = false;  //是否必须用https协议
+                option.SaveToken = true;  //生成token,是否保存到上下文中，并向后传递
+
+                //生成token的一些参数验证，都从配置文件中获取
+                var token = Configuration.GetSection("tokenParameter").Get<TokenParameter>();
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(token.Secret)),
+                    ValidIssuer = token.Issuer,
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                };
+            });
+            #endregion
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -125,6 +191,7 @@ namespace Iot.Max.Api
 
             app.UseCors("IotMaxCors");
 
+            app.UseAuthentication(); //启用身份验证
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
