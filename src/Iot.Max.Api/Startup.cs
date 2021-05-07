@@ -11,6 +11,7 @@
  * **/
 
 using AutoMapper;
+using Iot.Max.Api.Controllers.WS;
 using Iot.Max.Lib;
 using Iot.Max.Model.Models.Token;
 using Iot.Max.Services;
@@ -184,6 +185,14 @@ namespace Iot.Max.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Iot.Max.Api v1"));
             }
+
+
+            app.UseWebSockets(new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(60),                
+                ReceiveBufferSize = 1 * 1024
+            });
+            app.UseMiddleware<WebsocketHandlerMiddleware>();
 
             app.UseStaticFiles(); //使用上传的图片
 

@@ -27,7 +27,13 @@ namespace Iot.Max.Api.Controllers.Rbac
             _services.DapperClient = _dapper;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
         [HttpGet("query")]
         public IActionResult Query(int page = 1, int limit = 20, string search = "")
         {
@@ -56,7 +62,11 @@ namespace Iot.Max.Api.Controllers.Rbac
             }
             return Ok(result);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult Query(string id)
         {
@@ -75,7 +85,11 @@ namespace Iot.Max.Api.Controllers.Rbac
             }
             return Ok(result);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         [HttpPost("delete")]
         public IActionResult Delete(List<string> ids)
         {
@@ -101,7 +115,11 @@ namespace Iot.Max.Api.Controllers.Rbac
             }
             return Ok(result);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("edit")]
         public IActionResult Edit(RbacMenu model)
         {

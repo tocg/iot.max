@@ -28,6 +28,36 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:Iot.Max.Api.Controllers.Rbac.RbacMenuController.Query(System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <param name="search"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.Rbac.RbacMenuController.Query(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.Rbac.RbacMenuController.Delete(System.Collections.Generic.List{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Iot.Max.Api.Controllers.Rbac.RbacMenuController.Edit(Iot.Max.Model.Models.RbacMenu)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
         <member name="T:Iot.Max.Api.Controllers.Retail.RetailBrandController">
             <summary>
             
