@@ -64,7 +64,7 @@ export default {
         { navname: "技能详解", navurl: "5", navsort: "", navstate: "0" },
         { navname: "面试录音", navurl: "4", navsort: "", navstate: "0" },
         { navname: "面试技巧", navurl: "3", navsort: "", navstate: "0" },
-        { navname: "面试问题", navurl: "2", navsort: "", navstate: "0" },
+        { navname: "面试问题", navurl: "/interview/question", navsort: "", navstate: "0" },
         { navname: "首页", navurl: "/", navsort: "", navstate: "0" },
       ],
     };

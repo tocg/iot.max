@@ -4,6 +4,18 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+
+/* 自定义axios */
+
+//引用axios
+import axios from 'axios'
+Vue.prototype.axios = axios;
+
+//配置全局的url
+axios.defaults.baseURL ='http://api.iot.lcvue.com'
+//跨域请求的全局凭证
+//axios.defaults.withCredentials = true;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

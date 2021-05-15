@@ -292,6 +292,7 @@ namespace Iot.Max.Lib
             if (!trans.Any()) return new Tuple<bool, string>(false, "执行事务SQL语句不能为空！");
             using (IDbConnection conn = Connection)
             {
+                conn.Open();
                 //开启事务
                 using (var transaction = conn.BeginTransaction())
                 {

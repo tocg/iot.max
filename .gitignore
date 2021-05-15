@@ -347,3 +347,5 @@ healthchecksdb
 /src/Iot.Max.Wx.View/Properties
 /src/Iot.Max.Api/wwwroot/wx
 /src/Iot.Max.Admin/.config
+/src/Iot.Max.Api/wwwroot/document
+/src/Iot.Max.Api/wwwroot/brand/f1ec9a71fca84470b783a954b0ee88f3.xlsx

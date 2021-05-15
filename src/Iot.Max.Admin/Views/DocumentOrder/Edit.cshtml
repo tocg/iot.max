@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "编辑文档";
+    Layout = "~/Views/Shared/_LayuiList.cshtml";
+}
+<style>
+    .layui-form-item .layui-input-inline {
+        width: initial;
+    }
+</style>
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" lay-filter="formEdit">
+            <input type="hidden" value="" id="ID" name="ID" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">文档名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Title" required lay-verify="required" placeholder="品牌名称" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">请不要录入重复的品牌名称</div>
+            </div>
+            <div class="layui-form-item">
+
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">上传附件</label>
+                    <div class="layui-input-block">
+                        <input type="file" id="file" name="file" multiple />
+                    </div>
+                </div>
+
+                <div class="layui-input-inline">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">对外开放</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="IsOpen" lay-skin="switch" lay-text="ON|OFF" checked>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">文档内容</label>
+                <div class="layui-input-block">
+                    <textarea id="Context" name="Context" placeholder="请编辑文档内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <a class="layui-btn layui-btn-normal" id="btnOk" lay-submit lay-filter="formEdit"> <i class="layui-icon layui-icon-ok"></i> 立即提交</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/http.request.js"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form','layedit'], function () {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , form = layui.form;
+        var layedit = layui.layedit;
+        var $ = layui.$;
+
+        //建立编辑器
+        var edit0 = layedit.build('Context',
+            {
+                height: 330 //设置编辑器高度
+            });
+
+        //返填
+        var id = getQueryVariable("id")
+        if (id != undefined) {
+            $.get(baseUrl + '/document/order' + id, function (res) {
+                form.val("formEdit", {
+                    ID: res.data.id,
+                    BrandName: res.data.brandName,
+                    Description: res.data.description,
+                    State: res.data.state
+                });
+            });
+        }
+
+        $('#btnOk').on('click', function () {
+            //获取表单区域所有值
+            var data = form.val("formEdit");
+
+            console.log(data);
+            //获取上传选择的文件
+            var templates = $("#file")[0].files;
+            var formdata = new FormData();
+            for (var i = 0; i < templates.length; i++) {
+                formdata.append("temp" + i, templates[i]);
+            }
+
+            data.Context = layedit.getContent(edit0);
+            console.log(data);
+            //将数据添加到formdata中
+            formdata.append("data", JSON.stringify(data));
+
+            //提交数据。由callback来处理服务器返回的数据
+            postFile(baseUrl + '/document/order/edit', formdata, postCallback);
+
+        });
+
+        //处理提交服务器返回的结果
+        function postCallback(res) {
+
+            layer.msg(res.msg);
+            //ajax保存数据
+            if (res.code == 0 || res.code == 200) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layui.table.reload('demo');//重载父页表格，参数为表格ID
+                parent.layer.close(index);
+            }
+        }
+    });
+</script>
+
+
+

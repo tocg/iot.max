@@ -17,6 +17,7 @@ namespace Iot.Max.Api
             //CreateMap<RetailSPU,RetailSPUDto>();
 
             CreateMap<InterQuestionCategory, InterQuestionCategoryDto>();
+
         }
     }
 }

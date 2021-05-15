@@ -36,7 +36,7 @@
         console.log('Received Message: ' + evt.data);
         if (evt.data) {
             var content = $('#msgList').val();
-            content = content + '\r\n' + evt.data;
+            content = evt.data + '\r\n' + content;
 
             $('#msgList').val(content);
         }

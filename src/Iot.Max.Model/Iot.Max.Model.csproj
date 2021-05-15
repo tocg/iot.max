@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Models\Document\DocumentAnnex.cs~RF1cfc84a6.TMP" />
+  </ItemGroup>
+
 </Project>

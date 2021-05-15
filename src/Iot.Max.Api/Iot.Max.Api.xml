@@ -28,6 +28,41 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="T:Iot.Max.Api.Controllers.Document.DocumentOrderController">
+            <summary>
+            文档
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig._gatewayUrl">
+            <summary>
+            沙箱测试环境的网关
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig.gatewayUrl">
+            <summary>
+            生产环境的网关
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig.private_key">
+            <summary>
+            沙箱测试环境的原始格式RSA私钥
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig._private_key">
+            <summary>
+            真实环境的原始格式RSA私钥
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig.alipay_public_key">
+            <summary>
+            沙箱测试环境的对应公钥
+            </summary>
+        </member>
+        <member name="F:Iot.Max.Api.Controllers.Pay.AliPayConfig._alipay_public_key">
+            <summary>
+            真实环境的对应公钥
+            </summary>
+        </member>
         <member name="M:Iot.Max.Api.Controllers.Rbac.RbacMenuController.Query(System.Int32,System.Int32,System.String)">
             <summary>
             

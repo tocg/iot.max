@@ -15,6 +15,7 @@ using Iot.Max.Api.Controllers.WS;
 using Iot.Max.Lib;
 using Iot.Max.Model.Models.Token;
 using Iot.Max.Services;
+using Iot.Max.Services.Document;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
@@ -138,9 +139,11 @@ namespace Iot.Max.Api
 
             #endregion
 
-            //业务服务层
+            #region 注册业务服务层
             //services.AddTransient<IServices>(x =>  new BaseServices(new DapperClientHelper(Configuration)) );
             services.AddTransient<IServices, BaseServices>();
+            services.AddTransient<DocumentOrderServices>();
+            #endregion
 
             #region 默认日期带T格式（默认ISO-8601格式造成的）
 
@@ -150,7 +153,7 @@ namespace Iot.Max.Api
             });
             #endregion
 
-            #region JWT
+            #region JWT验证
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(option =>
             {

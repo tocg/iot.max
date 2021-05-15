@@ -7,6 +7,7 @@ import admin_student_list from '@/view/admin/student/list'
 import admin_student_upload from '@/view/admin/student/upload'
 
 
+import interview_question from '@/view/interview/question'
 
 import ElementUi from 'element-ui'	//引入elementui组件
 import 'element-ui/lib/theme-chalk/index.css'		//引入样式文件
@@ -35,6 +36,11 @@ export default new Router({
       path: '/admin/student/upload',
       name: 'admin/student/upload',
       component: admin_student_upload
-    }
+    },
+    {
+      path: '/interview/question',
+      name: 'interview/question',
+      component: interview_question
+    },
   ]
 })

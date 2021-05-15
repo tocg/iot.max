@@ -22,6 +22,19 @@ function post(url, data, callback) {
     });
 }
 
+function _post(url, data, callback) {
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        headers: {
+            "Authorization": "Bearer " + token + ""
+        },
+        success: callback
+    });
+}
 
 function postFile(url, data, callback) {
     $.ajax({
