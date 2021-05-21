@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewData["Title"] = "Test";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Iot.Max vue.js + elementui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+        #app{
+            padding:20px;
+        }
+        #app, .el-container {
+            /*height: 100%;*/
+        }
+
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="审批人">
+                <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="活动区域">
+                <el-select v-model="formInline.region" placeholder="活动区域">
+                    <el-option label="区域一" value="shanghai"></el-option>
+                    <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @@click="onSubmit" icon="el-icon-search">搜索</el-button>
+                <el-button type="success" icon="el-icon-edit">成功按钮</el-button>
+                <el-button type="danger" icon="el-icon-delete">危险按钮</el-button>
+                <el-button type="info"><i class="el-icon-download el-icon--right"></i>导出</el-button>
+            </el-form-item>
+        </el-form>
+        <template>
+            <el-table :data="tableData"
+                      style="width: 100%"
+                      :row-class-name="tableRowClassName">
+                <el-table-column type="selection" width="35"></el-table-column>
+                <el-table-column prop="date"
+                                 label="日期"
+                                 width="180">
+                </el-table-column>
+                <el-table-column prop="name"
+                                 label="姓名"
+                                 width="180">
+                </el-table-column>
+                <el-table-column prop="address"
+                                 label="地址">
+                </el-table-column>
+                <el-table-column label="操作" width="200">
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="dialogFormVisible = true">编辑</el-button>
+                        <el-button size="mini"
+                                   type="danger"
+                                   @@click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="block" style="text-align:center;margin-top:40px;">
+                <el-pagination @@size-change="handleSizeChange"
+                               @@current-change="handleCurrentChange"
+                               :current-page="pages.currentPage4"
+                               :page-sizes="[100, 200, 300, 400]"
+                               :page-size="100"
+                               layout="total, sizes, prev, pager, next, jumper"
+                               :total="400">
+                </el-pagination>
+            </div>
+        </template>
+
+        <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="活动名称" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="活动区域" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择活动区域">
+                        <el-option label="区域一" value="shanghai"></el-option>
+                        <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @@click="dialogFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    tableData: [{
+                        date: '2016-05-02',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄',
+                    }, {
+                        date: '2016-05-04',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄',
+                    }, {
+                        date: '2016-05-03',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                        }],
+                    dialogTableVisible: false,  // ============以下为dialog的属性
+                    dialogFormVisible: false,
+                    form: {
+                        name: '',
+                        region: '',
+                        date1: '',
+                        date2: '',
+                        delivery: false,
+                        type: [],
+                        resource: '',
+                        desc: ''
+                    },
+                    formLabelWidth: '120px', //=============dialog属性结束 
+                    formInline: {    //************查询属性
+                        user: '',
+                        region: ''
+                    },          //************查询属性结束
+                    pages: {    //分页属性
+                        currentPage1: 5,
+                        currentPage2: 5,
+                        currentPage3: 5,
+                        currentPage4: 4
+                    },
+                }
+            },
+            methods: {
+                tableRowClassName({ row, rowIndex }) {
+                    if (rowIndex === 1) {
+                        return 'warning-row';
+                    } else if (rowIndex === 3) {
+                        return 'success-row';
+                    }
+                    return '';
+                },
+                handleEdit(index, row) { //编辑事件
+                    console.log(index, row);
+                },
+                handleDelete(index, row) { //删除事件
+                    console.log(index, row);
+                },
+                onSubmit() { //查询事件
+                    console.log('submit!');
+                },
+                handleSizeChange(val) { //分页事件1
+                    console.log(`每页 ${val} 条`);
+                },
+                handleCurrentChange(val) {//分页事件2
+                    console.log(`当前页: ${val}`);
+                }
+            },
+        });
+    </script>
+</body >
+</html >

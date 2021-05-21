@@ -1,0 +1,15 @@
+
+
+Nuget安装包：
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.Tools
+Pomelo.EntityFrameworkCore.MySql
+
+
+DBFirst生成model文件，生成到指定models目录 （生成全部表）
+>Scaffold-DbContext -Force  "Server=localhost;User Id=root;Password=qwe123;Database=iot_demo" -Provider "Pomelo.EntityFrameworkCore.MySql" -OutputDir Models
+
+如果更新单个表
+命令行后面添加  -Tables "表名"
+
+以上命令的表，必须要有主键

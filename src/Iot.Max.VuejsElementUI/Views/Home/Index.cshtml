@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Iot.Max vue.js + elementui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        #app, .el-container {
+            height: 100%;
+        }
+
+        .el-header {
+            padding: 0px;
+        }
+
+        .el-header, .el-footer {
+            /*background-color: #B3C0D1;*/
+            background-color: rgb(84, 92, 100);
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+            border-bottom: 1px solid rgb(84, 92, 100);
+        }
+
+        .el-aside {
+            /*background-color: #D3DCE6;*/
+            background-color: rgb(84, 92, 100);
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+        .el-menu-vertical-demo {
+            border: 1px solid rgb(84, 92, 100);
+        }
+        .el-main {
+            /*background-color: #E9EEF3;*/
+            color: #333;
+            text-align: center;
+            padding:0;
+            /*line-height: 160px;*/
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+
+        .logo{
+            font-size:25px;
+            font-weight:600;
+        }
+        .subitem .el-menu-item {
+            text-align: left;
+        }
+
+        .mainIframe {
+            width: 100%;
+            height: 99.2%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-header>
+                <el-row>
+                    <el-col style="width: 200px;border-bottom: 1px solid rgb(84, 92, 100);">
+                        <div class="grid-content bg-purple logo">{{logo}}</div>
+                    </el-col>
+                    <el-col :span="18">
+                        <el-menu :default-active="activeIndex2"
+                                 class="el-menu-demo"
+                                 mode="horizontal"
+                                 @@select="handleSelect"
+                                 background-color="#545c64"
+                                 text-color="#fff"
+                                 active-text-color="#ffd04b">
+                            <el-menu-item :index="(index + 1)+''" v-for="(item,index) in this.masterMenu" :key="index">
+                                {{item.name}}
+                            </el-menu-item>
+                        </el-menu>
+                    </el-col>
+                </el-row>
+
+            </el-header>
+            <el-container>
+                <el-aside width="200px">
+                    <el-menu 
+                             default-active="2"
+                             class="el-menu-vertical-demo subitem"
+                             @@open="handleOpen"
+                             @@close="handleClose"
+                             background-color="#545c64"
+                             text-color="#fff"
+                             active-text-color="#ffd04b">
+                        <template>
+                            <el-menu-item :index="(i + 1)+''" v-for="(item,i) in this.detailMenu" :key="i">
+                                <i class="el-icon-menu"></i>
+                                <span slot="title">{{item.name}}</span>
+                            </el-menu-item>
+                        </template>
+                        <el-menu-item index="0" v-on:click="openUrl('/home/privacy?r=media/toutiaolist', '测试首页')">
+                            <i class="el-icon-setting"></i>
+                            <span slot="title">测试首页</span>
+                        </el-menu-item>
+                        <el-menu-item index="4" v-on:click="openUrl('/home/test?r=media/toutiaolist', '模板页面')">
+                            <i class="el-icon-setting"></i>
+                            <span slot="title">模板页面</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
+                <el-main>
+                    <iframe id="mainIframe" class="mainIframe" v-bind:src="iframeUrl" frameborder="0"></iframe>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    logo:'LOGO',
+                    activeIndex: '1',
+                    activeIndex2: '1',
+                    iframeUrl: "/home/privacy?r=media/weibolist",
+                    detailMenu: [],                  
+                    allMenu: [],
+                    masterMenu: []
+                }
+            },
+            methods: {
+                handleSelect(key, keyPath) {
+                    //console.log(key, keyPath);
+                    //主菜单的点击事件，加载子菜单
+                    this.initData(key);
+                },
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                openUrl: function (url, msg) {
+                    //openUrl的链接点击事件
+                    this.iframeUrl = url + "&time=" + new Date().getTime();
+                },
+                initData(key) {
+                    //点击菜单，查询子菜单
+                    this.detailMenu = this.allMenu.filter((p) => { return p.pid == key });
+                }
+            },
+            created: function () {
+                //初始化菜单数据
+                axios.get('/js/elemenudata.json?v=' + new Date())
+                    .then(function (res) {
+                        //Vue.set(this.allMenu,0,res.data.menus)
+                        vue.$data.allMenu = res.data.menus  //为主菜单赋值
+                        vue.$data.masterMenu = vue.$data.allMenu.filter((p) => { return p.pid == 0 }); //筛选主菜单，并赋值
+                    })
+                    .catch(err => { console.log(err) }
+                    )
+            },            
+            //filters: {  //过滤器
+            //    dataFound(id) {
+            //        return 
+            //    },
+            //}
+        })
+    </script>
+</body>
+</html>

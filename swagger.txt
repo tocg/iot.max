@@ -6,3 +6,10 @@ swagger在.net core api 5.0中自带
         var basePath = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
         var xmlPath = System.IO.Path.Combine(basePath, "Iot.Max.Api.xml"); //Iot.Max.Api.xml为第一步勾选中显示的名字
         c.IncludeXmlComments(xmlPath);
+
+
+
+要想api的swagger在生产环境中使用，需要在web.config中添加
+<environmentVariables>
+	<environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+</environmentVariables>

@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Admin", "src\Iot.Ma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "document", "document", "{F45E7CAA-F6B9-47F5-B199-38194834A485}"
 	ProjectSection(SolutionItems) = preProject
+		efcore.txt = efcore.txt
 		jwt.txt = jwt.txt
 		document\readme.txt = document\readme.txt
 		swagger.txt = swagger.txt
@@ -25,6 +26,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Wx", "src\Iot.Max.Wx\Iot.Max.Wx.csproj", "{9A38A2A4-41F1-4220-B4C8-D80EDE659F2B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iot.Max.Wx.View", "src\Iot.Max.Wx.View\Iot.Max.Wx.View.csproj", "{3F2A50B7-6808-4575-9784-60C08FB34CAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Max.DBMigration", "src\Iot.Max.DBMigration\Iot.Max.DBMigration.csproj", "{ACE0B545-713A-4810-B513-0B283A097EB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Max.VuejsElementUI", "src\Iot.Max.VuejsElementUI\Iot.Max.VuejsElementUI.csproj", "{733C9682-97B1-4C89-BABD-81EF58D34BFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +69,14 @@ Global
 		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F2A50B7-6808-4575-9784-60C08FB34CAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE0B545-713A-4810-B513-0B283A097EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE0B545-713A-4810-B513-0B283A097EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE0B545-713A-4810-B513-0B283A097EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE0B545-713A-4810-B513-0B283A097EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{733C9682-97B1-4C89-BABD-81EF58D34BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{733C9682-97B1-4C89-BABD-81EF58D34BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733C9682-97B1-4C89-BABD-81EF58D34BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{733C9682-97B1-4C89-BABD-81EF58D34BFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
